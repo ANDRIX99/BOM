@@ -25,28 +25,24 @@ namespace BOM.Pages.VersioneDistintaBase
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var versionedistintabase =  await _context.VersioneDistintaBase.FirstOrDefaultAsync(m => m.Id == id);
-            if (versionedistintabase == null)
-            {
-                return NotFound();
-            }
-            VersioneDistintaBase = versionedistintabase;
+            var versionedistintabase =  await _context.VersioneDistintaBase
+                .Include(m => m.Product)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            
+            if (versionedistintabase == null) return NotFound();
+
+            if (VersioneDistintaBase is null) return NotFound();
+            if (VersioneDistintaBase.Product is null) return BadRequest();
+
             return Page();
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            if (!ModelState.IsValid) return Page();
 
             _context.Attach(VersioneDistintaBase).State = EntityState.Modified;
 
@@ -56,14 +52,8 @@ namespace BOM.Pages.VersioneDistintaBase
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!VersioneDistintaBaseExists(VersioneDistintaBase.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!VersioneDistintaBaseExists(VersioneDistintaBase.Id)) return NotFound();
+                else throw;
             }
 
             return RedirectToPage("./Index");

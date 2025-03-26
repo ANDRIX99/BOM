@@ -14,9 +14,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.VersioneDistintaBase[0].IdProduct)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.VersioneDistintaBase[0].Version)
             </th>
             <th>
@@ -28,9 +25,6 @@
     <tbody>
 @foreach (var item in Model.VersioneDistintaBase) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdProduct)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Version)
             </td>

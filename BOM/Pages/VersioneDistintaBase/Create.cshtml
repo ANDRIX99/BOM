@@ -1,32 +1,54 @@
 ﻿@page
 @model BOM.Pages.VersioneDistintaBase.CreateModel
 
-        @{
-        ViewData["Title"] = "Create";
-        }
-        
-        <h1>Create</h1>
-        
-    <h4>VersioneDistintaBase</h4>
-    <hr />
-    <div class="row">
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>VersioneDistintaBase</h4>
+<hr />
+<div class="row">
     <div class="col-md-4">
-    <form method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="VersioneDistintaBase.IdProduct" class="control-label"></label>
-                <input asp-for="VersioneDistintaBase.IdProduct" class="form-control" />
-                <span asp-validation-for="VersioneDistintaBase.IdProduct" class="text-danger"></span>
+        <!-- <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+        <label asp-for="VersioneDistintaBase.Product.Id" class="control-label" ></label>
+        <input asp-for="VersioneDistintaBase.Product.Id" class="form-control" />
+        <span asp-validation-for="VersioneDistintaBase.Product.Id" class="text-danger" ></span>
+        </div>
+        <div class="form-group">
+        <label asp-for="VersioneDistintaBase.Version" class="control-label"></label>
+        <input asp-for="VersioneDistintaBase.Version" class="form-control" />
+        <span asp-validation-for="VersioneDistintaBase.Version" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+        <label asp-for="VersioneDistintaBase.CreationTime" class="control-label"></label>
+        <input asp-for="VersioneDistintaBase.CreationTime" class="form-control" />
+        <span asp-validation-for="VersioneDistintaBase.CreationTime" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+        </form>-->
+        <form method="post" >
+            <div class="form-group" >
+                <label for="version">Version</label>
+                <input type="number" id="version" name="VersioneDistintaBase.Version" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="VersioneDistintaBase.Version" class="control-label"></label>
-                <input asp-for="VersioneDistintaBase.Version" class="form-control" />
-                <span asp-validation-for="VersioneDistintaBase.Version" class="text-danger"></span>
+                <label for="itemId">IdProduct</label>
+                <select id="itemId" name="VersioneDistintaBase.ProductId" class="form-control" >
+                    @foreach (var item in Model.Product)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
-                <label asp-for="VersioneDistintaBase.CreationTime" class="control-label"></label>
+                <label for="datetime">Creation time</label>
                 <input asp-for="VersioneDistintaBase.CreationTime" class="form-control" />
-                <span asp-validation-for="VersioneDistintaBase.CreationTime" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
