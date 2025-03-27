@@ -93,78 +93,75 @@ namespace BOM.Pages.VersioneDistintaBase
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
         public async Task<IActionResult> OnPostAsync()
         {
-            // Debugging
-            Console.WriteLine("???? OnPostAsync: OnPostAsync was call");
-            Console.WriteLine($"???? OnPostAsync: VersioneDistintaBase.ProductId = {VersioneDistintaBase.ProductId}");
-            Console.WriteLine($"???? OnPostAsync: VersioneDistintaBase.CreationTime = {VersioneDistintaBase.CreationTime}");
+            // Debugging: verifica i valori passati
+            // Console.WriteLine("OnPostAsync: OnPostAsync was called.");
+            // Console.WriteLine($"OnPostAsync: VersioneDistintaBase.ProductId = {VersioneDistintaBase.ProductId}");
 
-            // Find existing entity on the database
+            // Recover entity from database
             var versioneDistintaBaseDb = await _context.VersioneDistintaBase
-                .Include(v => v.Product)
+                .Include(v => v.Product)  // Carica la relazione con Product
                 .FirstOrDefaultAsync(v => v.Id == VersioneDistintaBase.Id);
 
-            if (versioneDistintaBaseDb == null) return NotFound();
+            // Console.WriteLine("???? OnPostAsync: Are you here 1");
 
-            // Updating entitys properties
+            if (versioneDistintaBaseDb == null)
+            {
+                return NotFound();
+            }
+
+            // Console.WriteLine("???? OnPostAsync: Are you here 2");
+
+            // Verify ProductId is not null and then verify with a valid Id on Item table
+            if (VersioneDistintaBase.ProductId == 0 || !await _context.Item.AnyAsync(i => i.Id == VersioneDistintaBase.ProductId))
+            {
+                ModelState.AddModelError("VersioneDistintaBase.ProductId", "The Product is required.");
+                ViewData["ProductList"] = await _context.Item.ToListAsync();
+                return Page();
+            }
+
+           //  Console.WriteLine("???? OnPostAsync: Are you here 3");
+
+            // Assign new value (is not necessary to touch 'Product')
             versioneDistintaBaseDb.ProductId = VersioneDistintaBase.ProductId;
             versioneDistintaBaseDb.Version = VersioneDistintaBase.Version;
             versioneDistintaBaseDb.CreationTime = VersioneDistintaBase.CreationTime;
 
-            // View error on ModelState
+            // Console.WriteLine("???? OnPostAsync: Are you here 3.1");
+
+            // Verify errors in ModelState
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("OnPostAsync: !ModelState.IsValid");
-                foreach (var state in ModelState)
-                {
-                    foreach (var error in state.Value.Errors)
-                    {
-                        Console.WriteLine($"Error in {state.Key}: {error.ErrorMessage}");
-                    }
-                }
-                Console.WriteLine("OnPostAsync: !ModelState.IsValie get new product list");
+                // Console.WriteLine("???? OnPostAsync: Are you here 3.2");
                 ViewData["ProductList"] = await _context.Item.ToListAsync();
+                // return Page();
             }
 
-            // I do this query to be sure to populate ViewData["ProductList"]
-            // and in case is empty I repopulate with the list
-            // Query for fill ProductList
-            // var ProductList = await _context.Item.ToListAsync();
-            //Console.WriteLine("Product list count: " + ProductList.Count);
-            //Console.WriteLine("Product list: ");
-            //foreach (var item in ProductList)
-            //{
-            //    Console.WriteLine("Item id: " + item.Id + " " + "Item Name: " + item.Name);
-            //}
+            // Console.WriteLine("???? OnPostAsync: Are you here 4");
 
-            // ViewData["ProductList"] = ProductList;
+            // Mark the entity as modified
+            _context.Attach(versioneDistintaBaseDb).State = EntityState.Modified;
 
-            if (!ModelState.IsValid)
-            {
-                Console.WriteLine("???? OnPostAsync: Return the same page with some error error = idk");
-                return Page();
-            }
-            Console.WriteLine("????? OnPostAsync ModelState: " + ModelState);
 
-            Console.WriteLine($"???? OnPostAsync CreationTime: {VersioneDistintaBase.CreationTime}");
-
-            _context.Attach(VersioneDistintaBase).State = EntityState.Modified;
+            // Console.WriteLine($"???? OnPostAsync: Entity state before save: {_context.Entry(versioneDistintaBaseDb).State}");
 
             try
             {
+                //Console.WriteLine("???? OnPostAsync: Are you here 5");
                 // Save changes
                 var result = await _context.SaveChangesAsync();
-                Console.WriteLine($"???? OnPostAsync: Number of records affected = {result}");
+                // Console.WriteLine($"OnPostAsync: Number of records affected = {result}");
             }
             catch (DbUpdateConcurrencyException)
             {
-                Console.WriteLine("OnPostAsync: DbUpdateConcurrencyException ex");
+                Console.WriteLine("???? OnPostAsync: Are you here 6");
                 if (!VersioneDistintaBaseExists(VersioneDistintaBase.Id)) return NotFound();
                 else throw;
             }
 
+            // Console.WriteLine("???? OnPostAsync: Are you here 7");
+            // Return to Index page
             return RedirectToPage("./Index");
         }
 
