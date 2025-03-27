@@ -29,7 +29,7 @@ namespace BOM.Pages.VersioneDistintaBase
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            Console.WriteLine($"🟢 DEBUG: Richiesta ricevuta per Id = {id}");
+            // Console.WriteLine($"🟢 DEBUG: Richiesta ricevuta per Id = {id}");
 
             if (id == null)
             {
@@ -39,12 +39,12 @@ namespace BOM.Pages.VersioneDistintaBase
 
             // Query for fill ProductList
             var ProductList = await _context.Item.ToListAsync();
-            Console.WriteLine("Product list count: " + ProductList.Count );
-            Console.WriteLine("Product list: ");
-            foreach ( var item in ProductList )
-            {
-                Console.WriteLine("Item id: " + item.Id + " " + "Item Name: " + item.Name);
-            }
+            //Console.WriteLine("Product list count: " + ProductList.Count );
+            //Console.WriteLine("Product list: ");
+            //foreach ( var item in ProductList )
+            //{
+            //    Console.WriteLine("Item id: " + item.Id + " " + "Item Name: " + item.Name);
+            //}
 
             ViewData["ProductList"] = ProductList;
 
@@ -66,7 +66,7 @@ namespace BOM.Pages.VersioneDistintaBase
                 return NotFound();
             }
 
-            Console.WriteLine($"✅ TROVATO: Id = {recordBase.Id}, Version = {recordBase.Version}, ProductId = {recordBase.ProductId}");
+            // Console.WriteLine($"✅ TROVATO: Id = {recordBase.Id}, Version = {recordBase.Version}, ProductId = {recordBase.ProductId}");
 
             // Adesso carichiamo con Include
             VersioneDistintaBase = await _context.VersioneDistintaBase
@@ -79,7 +79,7 @@ namespace BOM.Pages.VersioneDistintaBase
                 return NotFound();
             }
 
-            Console.WriteLine($"✅ VersioneDistintaBase caricata: Id = {VersioneDistintaBase.Id}, Version = {VersioneDistintaBase.Version}");
+            // Console.WriteLine($"✅ VersioneDistintaBase caricata: Id = {VersioneDistintaBase.Id}, Version = {VersioneDistintaBase.Version}");
 
             if (VersioneDistintaBase.Product == null)
             {
@@ -87,7 +87,7 @@ namespace BOM.Pages.VersioneDistintaBase
                 return BadRequest();
             }
 
-            Console.WriteLine($"🟢 DEBUG: VersioneDistintaBase è {(VersioneDistintaBase == null ? "NULL" : "OK")}");
+            // Console.WriteLine($"🟢 DEBUG: VersioneDistintaBase è {(VersioneDistintaBase == null ? "NULL" : "OK")}");
             // Console.WriteLine(VersioneDistintaBase);
 
             return Page();
@@ -96,31 +96,71 @@ namespace BOM.Pages.VersioneDistintaBase
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         public async Task<IActionResult> OnPostAsync()
         {
+            // Debugging
             Console.WriteLine("???? OnPostAsync: OnPostAsync was call");
+            Console.WriteLine($"???? OnPostAsync: VersioneDistintaBase.ProductId = {VersioneDistintaBase.ProductId}");
+            Console.WriteLine($"???? OnPostAsync: VersioneDistintaBase.CreationTime = {VersioneDistintaBase.CreationTime}");
+
+            // Find existing entity on the database
+            var versioneDistintaBaseDb = await _context.VersioneDistintaBase
+                .Include(v => v.Product)
+                .FirstOrDefaultAsync(v => v.Id == VersioneDistintaBase.Id);
+
+            if (versioneDistintaBaseDb == null) return NotFound();
+
+            // Updating entitys properties
+            versioneDistintaBaseDb.ProductId = VersioneDistintaBase.ProductId;
+            versioneDistintaBaseDb.Version = VersioneDistintaBase.Version;
+            versioneDistintaBaseDb.CreationTime = VersioneDistintaBase.CreationTime;
 
             // View error on ModelState
             if (!ModelState.IsValid)
             {
+                Console.WriteLine("OnPostAsync: !ModelState.IsValid");
                 foreach (var state in ModelState)
                 {
                     foreach (var error in state.Value.Errors)
                     {
-                        Console.WriteLine($"Errore in {state.Key}: {error.ErrorMessage}");
+                        Console.WriteLine($"Error in {state.Key}: {error.ErrorMessage}");
                     }
                 }
+                Console.WriteLine("OnPostAsync: !ModelState.IsValie get new product list");
+                ViewData["ProductList"] = await _context.Item.ToListAsync();
             }
 
-            if (!ModelState.IsValid) return Page();
+            // I do this query to be sure to populate ViewData["ProductList"]
+            // and in case is empty I repopulate with the list
+            // Query for fill ProductList
+            // var ProductList = await _context.Item.ToListAsync();
+            //Console.WriteLine("Product list count: " + ProductList.Count);
+            //Console.WriteLine("Product list: ");
+            //foreach (var item in ProductList)
+            //{
+            //    Console.WriteLine("Item id: " + item.Id + " " + "Item Name: " + item.Name);
+            //}
+
+            // ViewData["ProductList"] = ProductList;
+
+            if (!ModelState.IsValid)
+            {
+                Console.WriteLine("???? OnPostAsync: Return the same page with some error error = idk");
+                return Page();
+            }
             Console.WriteLine("????? OnPostAsync ModelState: " + ModelState);
+
+            Console.WriteLine($"???? OnPostAsync CreationTime: {VersioneDistintaBase.CreationTime}");
 
             _context.Attach(VersioneDistintaBase).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                // Save changes
+                var result = await _context.SaveChangesAsync();
+                Console.WriteLine($"???? OnPostAsync: Number of records affected = {result}");
             }
             catch (DbUpdateConcurrencyException)
             {
+                Console.WriteLine("OnPostAsync: DbUpdateConcurrencyException ex");
                 if (!VersioneDistintaBaseExists(VersioneDistintaBase.Id)) return NotFound();
                 else throw;
             }

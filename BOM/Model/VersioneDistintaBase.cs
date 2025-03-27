@@ -9,6 +9,6 @@
 
         // Relationship
         public int ProductId { get; set; } // Foreign key reference to Item
-        public Item Product { get; set; } // Nav to Item table
+        public Item Product { get; set; } // Nav to Item table (Relationship with Item table)
     }
 }

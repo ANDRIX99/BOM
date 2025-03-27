@@ -15,9 +15,14 @@
     <p>Nome prodotto: @Model.VersioneDistintaBase?.Product?.Name</p>
 
     <form method="post" asp-page="./Edit" >
+        <!-- Essential for update -->
         <input type="hidden" asp-for="VersioneDistintaBase.Id" />
-        <input type="text" placeholder="Version" name="VersionedistintaBase.Version" class="form-control" required />
-        <select id="productId" name="VersioneDistintaBase.ProductId" class="form-control" >
+
+        <!-- If you want to change version example from version 1 to version 2 -->
+        <input type="text" asp-for="VersioneDistintaBase.Version" class="form-control" />
+
+        <!-- If you want to change the product version for example change pasta v1 into pizza v1 -->
+        @* <select id="productId" asp-for="VersioneDistintaBase.ProductId" class="form-control" >
             <option value="">Select a product</option>
 
             @if (productList != null && productList.Any())
@@ -27,8 +32,31 @@
                     <option value="@item.Id">@item.Name</option>
                 }
             }
-        </select>
-        <input type="submit" />
+        </select> *@
+
+        <div class="form-group" >
+            <label asp-for="VersioneDistintaBase.ProductId" ></label>
+            <select asp-for="VersioneDistintaBase.ProductId" class="form-control" >
+                <option value="" > Select a product</option>
+                @if (ViewData["ProductList"] != null)
+                {
+                    @foreach (var items in productList)
+                    {
+                        <option value="@items.Id">@items.Name</option>
+                    }
+                } else Console.WriteLine("Edit.cshtml: ViewData[ProductList] is null ");
+
+            </select>
+            <span asp-validation-for="VersioneDistintaBase.ProductId" class="text-danger" ></span>
+        </div>
+
+        <!-- We do this because we don't want to change de creation time -->
+        <input type="hidden" asp-for="VersioneDistintaBase.CreationTime" />
+
+        <!-- Just to sperimenting something -->
+        <input type="hidden" asp-for="ProductList" />
+
+        <input type="submit" class="btn btn-primary" />
     </form>
 
     <a asp-page="./Index" >Undo</a>
