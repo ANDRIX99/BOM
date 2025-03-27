@@ -86,7 +86,7 @@ namespace BOM.Pages.VersioneDistintaBase
             }
 
             Console.WriteLine($"🟢 DEBUG: VersioneDistintaBase è {(VersioneDistintaBase == null ? "NULL" : "OK")}");
-            // Console.WriteLine(VersioneDistintaBase
+            // Console.WriteLine(VersioneDistintaBase);
 
             return Page();
         }
