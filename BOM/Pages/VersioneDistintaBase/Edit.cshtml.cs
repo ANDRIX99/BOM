@@ -23,6 +23,8 @@ namespace BOM.Pages.VersioneDistintaBase
         [BindProperty]
         public BOM.Model.VersioneDistintaBase VersioneDistintaBase { get; set; } = default!;
 
+        public List<BOM.Model.Item> ProductList { get; set; } = default!;
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             Console.WriteLine($"🟢 DEBUG: Richiesta ricevuta per Id = {id}");
@@ -32,6 +34,9 @@ namespace BOM.Pages.VersioneDistintaBase
                 Console.WriteLine("🚨 ERRORE: Id nullo, ritorno NotFound()");
                 return NotFound();
             }
+
+            // Query for fill ProductList
+            var ProductList = await _context.Item.ToListAsync();
 
             // Eseguiamo la query senza Include per vedere i dati base
             var recordBase = await _context.VersioneDistintaBase
@@ -72,7 +77,7 @@ namespace BOM.Pages.VersioneDistintaBase
             }
 
             Console.WriteLine($"🟢 DEBUG: VersioneDistintaBase è {(VersioneDistintaBase == null ? "NULL" : "OK")}");
-
+            Console.WriteLine(VersioneDistintaBase);
 
             return Page();
         }
