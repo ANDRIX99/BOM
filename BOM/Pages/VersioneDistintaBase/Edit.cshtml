@@ -1,4 +1,4 @@
-﻿@page "{id:int}"
+﻿@* @page "{id:int}"
 @model BOM.Pages.VersioneDistintaBase.EditModel
 
 <h1>Edit</h1>
@@ -48,4 +48,34 @@ ViewData["Title"] = "Edit";
 else
 {
     <p class="text-danger">⚠️ Errore: Nessun dato trovato per questa versione.</p>
+} *@
+
+@page "{id:int}"
+@model BOM.Model.VersioneDistintaBase
+@if (Model == null)
+{
+    <h2 class="text-danger">⚠️ ERRORE: Il Model è NULL nella vista Edit.cshtml!</h2>
 }
+
+@if (Model != null)
+{
+    <h3>Modifica Versione: @Model.Version</h3>
+
+    @* Aggiungi qui il resto del tuo form *@
+
+    <form method="post">
+        <div class="form-group">
+            <label for="version">Versione</label>
+            <input class="form-control" id="version" type="text" value="@Model.Version" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salva</button>
+    </form>
+}
+else
+{
+    <h2 class="text-danger">Errore: Nessun record trovato per questo ID.</h2>
+}
+
+ViewData["Title"] = "Edit";
+<h1>Editing @Model.Version</h1>
