@@ -46,6 +46,8 @@ namespace BOM.Pages.VersioneDistintaBase
                 Console.WriteLine("Item id: " + item.Id + " " + "Item Name: " + item.Name);
             }
 
+            ViewData["ProductList"] = ProductList;
+
             // Eseguiamo la query senza Include per vedere i dati base
             // Query without Include() to see data
             var recordBase = await _context.VersioneDistintaBase
@@ -91,109 +93,25 @@ namespace BOM.Pages.VersioneDistintaBase
             return Page();
         }
 
-        /*public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            /*var connection = _context.Database.GetDbConnection();
-            await connection.OpenAsync();
-            var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM VersioneDistintaBase WHERE Id = @id";
-            var param = command.CreateParameter();
-            param.ParameterName = "@id";
-            param.Value = id;
-            command.Parameters.Add(param);
-
-            var reader = await command.ExecuteReaderAsync();
-            if (await reader.ReadAsync())
-            {
-                Console.WriteLine($"Record trovato manualmente: Id={reader["Id"]}, Version={reader["Version"]}");
-            }
-            else
-            {
-                Console.WriteLine("Nessun record trovato con la query manuale");
-            }
-            await connection.CloseAsync();
-
-            Console.WriteLine($"Id received: {id}");
-            if (id == null) return NotFound();
-
-            // Console.WriteLine($"VersioneDistintaBase: {(VersioneDistintaBase != null ? "Found" : "Not Found")}");
-
-            /*var versionedistintabase =  await _context.VersioneDistintaBase
-                .Include(m => m.Product)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
-
-            var record = await _context.VersioneDistintaBase
-                .Where(v => v.Id == id)
-                .Select(v => new
-                {
-                    v.Id,
-                    v.Version,
-                    v.ProductId
-                })
-                .FirstOrDefaultAsync();
-
-            if (record == null)
-            {
-                Console.WriteLine($"⚠️ VersioneDistintaBase con Id={id} non trovata!");
-            }
-            else
-            {
-                Console.WriteLine($"✅ VersioneDistintaBase trovata: Id={record.Id}, Version={record.Version}, ProductId={record.ProductId}");
-            }
-
-            var versionedistintabase = await _context.VersioneDistintaBase
-                .Include(v => v.Product)
-                .FirstOrDefaultAsync();
-
-            //var query = _context.VersioneDistintaBase
-            //    .Include(m => m.Product)
-            //    .Where(m => m.Id == id)
-            //    .ToQueryString();
-
-            //Console.WriteLine(query);
-
-            Console.WriteLine($"VersioneDistintaBase: {(VersioneDistintaBase != null ? "Found" : "Not Found")}");
-
-            if (VersioneDistintaBase == null)
-            {
-                Console.WriteLine($"⚠️ VersioneDistintaBase con Id={id} non trovata!");
-            }
-            else
-            {
-                Console.WriteLine($"✅ VersioneDistintaBase trovata: Id={VersioneDistintaBase.Id}, Version={VersioneDistintaBase.Version}");
-
-                if (VersioneDistintaBase.Product == null)
-                {
-                    Console.WriteLine($"⚠️ Product è NULL per VersioneDistintaBase con Id={VersioneDistintaBase.Id}!");
-                }
-                else
-                {
-                    Console.WriteLine($"✅ Product caricato: Id={VersioneDistintaBase.Product.Id}, Name={VersioneDistintaBase.Product.Name}");
-                }
-            }
-
-            if (versionedistintabase == null) Console.WriteLine("id not found"); // return NotFound();
-
-            if (VersioneDistintaBase is null)
-            {
-
-                Console.WriteLine($"VersioneDistintaBase not found for Id: {id}");
-            }
-
-            if (VersioneDistintaBase.Product is null)
-            {
-                Console.WriteLine("Errore: Product è null per questa VersioneDistintaBase");
-                return BadRequest();
-            }
-
-            Console.WriteLine("Dati caricati con successo");
-            return Page();
-        }*/
-
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         public async Task<IActionResult> OnPostAsync()
         {
+            Console.WriteLine("???? OnPostAsync: OnPostAsync was call");
+
+            // View error on ModelState
+            if (!ModelState.IsValid)
+            {
+                foreach (var state in ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        Console.WriteLine($"Errore in {state.Key}: {error.ErrorMessage}");
+                    }
+                }
+            }
+
             if (!ModelState.IsValid) return Page();
+            Console.WriteLine("????? OnPostAsync ModelState: " + ModelState);
 
             _context.Attach(VersioneDistintaBase).State = EntityState.Modified;
 
