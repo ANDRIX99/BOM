@@ -22,18 +22,6 @@
         <input type="text" asp-for="VersioneDistintaBase.Version" class="form-control" />
 
         <!-- If you want to change the product version for example change pasta v1 into pizza v1 -->
-        @* <select id="productId" asp-for="VersioneDistintaBase.ProductId" class="form-control" >
-            <option value="">Select a product</option>
-
-            @if (productList != null && productList.Any())
-            {
-                @foreach (var item in productList)
-                {
-                    <option value="@item.Id">@item.Name</option>
-                }
-            }
-        </select> *@
-
         <div class="form-group" >
             <label asp-for="VersioneDistintaBase.ProductId" ></label>
             <select asp-for="VersioneDistintaBase.ProductId" class="form-control" >

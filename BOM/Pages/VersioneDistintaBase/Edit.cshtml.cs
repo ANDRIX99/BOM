@@ -48,7 +48,6 @@ namespace BOM.Pages.VersioneDistintaBase
 
             ViewData["ProductList"] = ProductList;
 
-            // Eseguiamo la query senza Include per vedere i dati base
             // Query without Include() to see data
             var recordBase = await _context.VersioneDistintaBase
                 .Where(v => v.Id == id)
@@ -95,7 +94,7 @@ namespace BOM.Pages.VersioneDistintaBase
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Debugging: verifica i valori passati
+            // Debugging: verify passed values
             // Console.WriteLine("OnPostAsync: OnPostAsync was called.");
             // Console.WriteLine($"OnPostAsync: VersioneDistintaBase.ProductId = {VersioneDistintaBase.ProductId}");
 
