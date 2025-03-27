@@ -66,10 +66,24 @@ else
         <input type="text" placeholder="Version" name="VersionedistintaBase.Version" class="form-control" required />
         <select id="productId" name="VersioneDistintaBase.ProductId" class="form-control" >
             <option value="">Select a product</option>
-           @*  @foreach (var item in Model.ProductList)
+            @* @foreach (var item in Model.ProductList)
             {
                 <option value="@item.Id" >@item.Name</option>
             } *@
+            @if (Model.ProductList != null && Model.ProductList.Count > 0)
+            {
+                @foreach (var item in Model.ProductList) {
+                    <option value="@item.Id" >@item.Name</option>
+                }
+            }
+            @if (Model.ProductList == null)
+            {
+                Console.WriteLine("???Edit.cshmtl: Model.ProductList is null");
+            }
+            @if (Model.ProductList.Count <= 0 && Model.ProductList != null)
+            {
+                Console.WriteLine("????Edit.cshtml: Model.ProductList is " + Model.ProductList.Count());
+            }
         </select>
         <input type="submit" />
     </form>

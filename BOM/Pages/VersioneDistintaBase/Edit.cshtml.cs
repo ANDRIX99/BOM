@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BOM.Data;
 using BOM.Model;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace BOM.Pages.VersioneDistintaBase
 {
@@ -23,6 +24,7 @@ namespace BOM.Pages.VersioneDistintaBase
         [BindProperty]
         public BOM.Model.VersioneDistintaBase VersioneDistintaBase { get; set; } = default!;
 
+        [BindProperty]
         public List<BOM.Model.Item> ProductList { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -37,8 +39,15 @@ namespace BOM.Pages.VersioneDistintaBase
 
             // Query for fill ProductList
             var ProductList = await _context.Item.ToListAsync();
+            Console.WriteLine("Product list count: " + ProductList.Count );
+            Console.WriteLine("Product list: ");
+            foreach ( var item in ProductList )
+            {
+                Console.WriteLine("Item id: " + item.Id + " " + "Item Name: " + item.Name);
+            }
 
             // Eseguiamo la query senza Include per vedere i dati base
+            // Query without Include() to see data
             var recordBase = await _context.VersioneDistintaBase
                 .Where(v => v.Id == id)
                 .Select(v => new
@@ -77,7 +86,7 @@ namespace BOM.Pages.VersioneDistintaBase
             }
 
             Console.WriteLine($"🟢 DEBUG: VersioneDistintaBase è {(VersioneDistintaBase == null ? "NULL" : "OK")}");
-            Console.WriteLine(VersioneDistintaBase);
+            // Console.WriteLine(VersioneDistintaBase
 
             return Page();
         }
