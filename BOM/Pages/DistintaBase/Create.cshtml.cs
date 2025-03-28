@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BOM.Data;
 using BOM.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace BOM.Pages.DistintaBase
 {
@@ -19,24 +20,56 @@ namespace BOM.Pages.DistintaBase
             _context = context;
         }
 
-        public IActionResult OnGet()
+        [BindProperty]
+        public BOM.Model.DistintaBase DistintaBase { get; set; }
+
+        [BindProperty]
+        public IList<BOM.Model.VersioneDistintaBase> VersionList { get; set; }
+
+        [BindProperty]
+        public int VersioneDistintaBaseId { get; set; }
+
+        [BindProperty]
+        public int ItemId { get; set; }
+
+        [BindProperty]
+        public int Quantity { get; set; }
+
+        public async Task<IActionResult> OnGet()
         {
+            ViewData["VersionList"] = await _context.VersioneDistintaBase.ToListAsync();
+            ViewData["ItemList"] = await _context.Item.ToListAsync();
             return Page();
         }
 
-        [BindProperty]
-        public BOM.Model.DistintaBase DistintaBase { get; set; } = default!;
-
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
-                return Page();
+                // If model is not valid, I repopulate the list to avoid the error in the view
+                ViewData["VersionList"] = await _context.VersioneDistintaBase.ToListAsync();
+                ViewData["ItemList"] = await _context.Item.ToListAsync();
+                // return Page();
             }
 
-            _context.DistintaBase.Add(DistintaBase);
-            await _context.SaveChangesAsync();
+            // Create new object DistintaBase without edit class structure
+            var nuovaDistintaBase = new BOM.Model.DistintaBase
+            {
+                VersioneDistintaBaseId = VersioneDistintaBaseId,
+                FiglioId = ItemId,
+                Amount = Quantity
+            };
+
+            try
+            {
+                _context.DistintaBase.Add(nuovaDistintaBase);
+                await _context.SaveChangesAsync();
+            } catch (DbUpdateException ex)
+            {
+                Console.WriteLine("Error during updating database");
+                Console.WriteLine(ex.InnerException?.Message);
+                throw;
+            }
 
             return RedirectToPage("./Index");
         }

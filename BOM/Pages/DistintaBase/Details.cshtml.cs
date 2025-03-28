@@ -19,25 +19,36 @@ namespace BOM.Pages.DistintaBase
             _context = context;
         }
 
+        [BindProperty]
         public BOM.Model.DistintaBase DistintaBase { get; set; } = default!;
+
+        [BindProperty]
+        public IList<BOM.Model.DistintaBase> ListDistintaBase { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var distintabase = await _context.DistintaBase.FirstOrDefaultAsync(m => m.Id == id);
+            var distintabase = await _context.DistintaBase
+                .Include(d => d.VersioneDistintaBase)
+                .Include(d => d.Figlio)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            ViewData["ItemList"] = await _context.Item.ToListAsync();
+            ViewData["VersioneDistintaBase"] = await _context.VersioneDistintaBase.ToListAsync();
+            // ViewData["DistintaBase"] = await _context.DistintaBase.ToListAsync();
+            ViewData["Id"] = id;
+            ListDistintaBase = await _context.DistintaBase
+                .Where(d => d.VersioneDistintaBaseId == id)
+                .Include(d => d.Figlio)
+                .Include(d => d.VersioneDistintaBase)
+                .ToListAsync();
+            DistintaBase = distintabase;
 
-            if (distintabase is not null)
-            {
-                DistintaBase = distintabase;
+            Console.WriteLine($"DistintaBases count: {ListDistintaBase?.Count ?? 0}");
 
-                return Page();
-            }
+            //if (distintabase is null) return NotFound();
 
-            return NotFound();
+            return Page();
         }
     }
 }

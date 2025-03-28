@@ -1,8 +1,11 @@
-﻿@page
+﻿@page "{id:int}"
 @model BOM.Pages.DistintaBase.DetailsModel
 
 @{
     ViewData["Title"] = "Details";
+    var ItemList = ViewData["ItemList"] as List<BOM.Model.Item>;
+    var ItemVersion = ViewData["VersioneDistintaBase"] as List<BOM.Model.VersioneDistintaBase>;
+    var Id = ViewData["Id"] as int?;
 }
 
 <h1>Details</h1>
@@ -10,28 +13,32 @@
 <div>
     <h4>DistintaBase</h4>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DistintaBase.IdVersion)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DistintaBase.IdVersion)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DistintaBase.IdSon)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DistintaBase.IdSon)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DistintaBase.Amount)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DistintaBase.Amount)
-        </dd>
-    </dl>
+    <table>
+        <tr>
+            <td>Name</td>
+            <td>Amount</td>
+        </tr>
+        @if (Model.ListDistintaBase != null) {
+            @foreach (var list in Model.ListDistintaBase)
+            {
+
+                <tr>
+                    <td>@list.Figlio.Name</td>
+                    <td>@list.Amount</td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@list.Id" >Edit amount</a>
+                    </td>
+                </tr>
+            }
+        } 
+        else
+        {
+            <tr>
+                <td>Empty</td>
+            </tr>
+        }
+    </table>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.DistintaBase.Id">Edit</a> |
     <a asp-page="./Index">Back to List</a>
 </div>

@@ -24,6 +24,8 @@ namespace BOM.Pages.DistintaBase
         public async Task OnGetAsync()
         {
             DistintaBase = await _context.DistintaBase.ToListAsync();
+            ViewData["VersioneDistintaBase"] = await _context.VersioneDistintaBase.ToListAsync();
+            ViewData["ItemList"] = await _context.Item.ToListAsync();
         }
     }
 }

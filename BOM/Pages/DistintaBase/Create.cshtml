@@ -1,33 +1,61 @@
 ﻿@page
 @model BOM.Pages.DistintaBase.CreateModel
 
-        
+@{
+    var versionList = ViewData["VersionList"] as List<BOM.Model.VersioneDistintaBase>;
+    var itemList = ViewData["ItemList"] as List<BOM.Model.Item>;
+}
+
 <h1>Create</h1>
-        
+
 <h4>DistintaBase</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!-- Select version  -->
             <div class="form-group">
-                <label asp-for="DistintaBase.IdVersion" class="control-label"></label>
-                <input asp-for="DistintaBase.IdVersion" class="form-control" />
-                <span asp-validation-for="DistintaBase.IdVersion" class="text-danger"></span>
+                <label for="ItemId">Select a version</label>
+                <select asp-for="@Model.VersioneDistintaBaseId" class="form-control">
+                    <option value="">Select a version</option>
+                    @foreach (var version in versionList)
+                    {
+                        foreach (var item in itemList)
+                        {
+                            if(item.Id == version.ProductId)
+                            {
+                                <option value="@version.Id" >@item.Name @version.Version</option>
+                            }
+                        }
+                    }
+                </select>
             </div>
+
+            <!-- Select item -->
             <div class="form-group">
-                <label asp-for="DistintaBase.IdSon" class="control-label"></label>
-                <input asp-for="DistintaBase.IdSon" class="form-control" />
-                <span asp-validation-for="DistintaBase.IdSon" class="text-danger"></span>
+                <label>Select item</label>
+                <select asp-for="@Model.ItemId" class="form-control" >
+                    <option value="">Select an item</option>
+                    @foreach (var item in itemList)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                        @* foreach (var version in versionList)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                            if (item.Id != version.ProductId)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        } *@
+                    }
+                </select>
             </div>
+
             <div class="form-group">
-                <label asp-for="DistintaBase.Amount" class="control-label"></label>
-                <input asp-for="DistintaBase.Amount" class="form-control" />
-                <span asp-validation-for="DistintaBase.Amount" class="text-danger"></span>
+                <label for="Quantity">Quantità</label>
+                <input type="number" asp-for="@Model.Quantity" class="form-control" min="1" required />
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            <input type="submit" />
         </form>
     </div>
 </div>

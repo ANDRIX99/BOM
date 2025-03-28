@@ -30,7 +30,10 @@ namespace BOM.Pages.DistintaBase
                 return NotFound();
             }
 
-            var distintabase =  await _context.DistintaBase.FirstOrDefaultAsync(m => m.Id == id);
+            var distintabase =  await _context.DistintaBase
+                .Include(m => m.VersioneDistintaBase)
+                .Include(m => m.Figlio)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (distintabase == null)
             {
                 return NotFound();
@@ -45,7 +48,9 @@ namespace BOM.Pages.DistintaBase
         {
             if (!ModelState.IsValid)
             {
-                return Page();
+                Console.WriteLine("The problem is here??");
+                DistintaBase = DistintaBase;
+                // return Page();
             }
 
             _context.Attach(DistintaBase).State = EntityState.Modified;
@@ -66,7 +71,9 @@ namespace BOM.Pages.DistintaBase
                 }
             }
 
-            return RedirectToPage("./Index");
+            TempData["Dato"] = DistintaBase.VersioneDistintaBase.Id;
+
+            return RedirectToPage("/DistintaBase/Details", new { id = TempData["Dato"] });
         }
 
         private bool DistintaBaseExists(int id)

@@ -3,8 +3,8 @@
     public class DistintaBase
     {
         public int Id { get; set; } // Primary Key
-        public int IdVersion { get; set; } // Foreign Key
-        public int IdSon { get; set; } // Foreign Key
+        public int VersioneDistintaBaseId { get; set; } // Foreign Key
+        public int FiglioId { get; set; } // Foreign Key
         public float Amount { get; set; }
 
         // Relationship

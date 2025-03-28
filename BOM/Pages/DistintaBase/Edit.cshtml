@@ -1,9 +1,5 @@
-﻿@page
+﻿@page "{id:int}"
 @model BOM.Pages.DistintaBase.EditModel
-
-@{
-    ViewData["Title"] = "Edit";
-}
 
 <h1>Edit</h1>
 
@@ -12,35 +8,18 @@
 <div class="row">
     <div class="col-md-4">
         <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="DistintaBase.Id" />
-            <div class="form-group">
-                
-                <label asp-for="DistintaBase.IdVersion" class="control-label"></label>
-                <input asp-for="DistintaBase.IdVersion" class="form-control" />
-                <span asp-validation-for="DistintaBase.IdVersion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                
-                <label asp-for="DistintaBase.IdSon" class="control-label"></label>
-                <input asp-for="DistintaBase.IdSon" class="form-control" />
-                <span asp-validation-for="DistintaBase.IdSon" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                
-                <label asp-for="DistintaBase.Amount" class="control-label"></label>
-                <input asp-for="DistintaBase.Amount" class="form-control" />
-                <span asp-validation-for="DistintaBase.Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+            <input type="number" asp-for="@Model.DistintaBase.Amount" />
+            <input type="hidden" asp-for="@Model.DistintaBase.Id" />
+            <input type="hidden" asp-for="@Model.DistintaBase.VersioneDistintaBaseId" />
+            <input type="hidden" asp-for="@Model.DistintaBase.FiglioId" />
+            <input type="hidden" asp-for="@Model.DistintaBase.VersioneDistintaBase.Id" />
+            <input type="submit" />
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-page="./Index">Back to List</a>
+    <a asp-page="./Details" asp-route-id="@Model.DistintaBase.VersioneDistintaBase.Id">Back to List</a>
 </div>
 
 @section Scripts {
