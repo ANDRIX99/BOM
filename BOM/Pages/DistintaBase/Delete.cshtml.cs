@@ -22,6 +22,8 @@ namespace BOM.Pages.DistintaBase
         [BindProperty]
         public BOM.Model.DistintaBase DistintaBase { get; set; } = default!;
 
+        public IList<BOM.Model.Item> Items { get; set; } = default!;
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -33,6 +35,10 @@ namespace BOM.Pages.DistintaBase
 
             if (distintabase is not null)
             {
+                Items = await _context.Item.ToListAsync();
+                ViewData["ItemList"] = _context.Item.ToListAsync();
+                ViewData["Id"] = id;
+
                 DistintaBase = distintabase;
 
                 return Page();

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using BOM.Data;
 using BOM.Model;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace BOM.Pages.DistintaBase
 {
@@ -33,7 +34,7 @@ namespace BOM.Pages.DistintaBase
         public int ItemId { get; set; }
 
         [BindProperty]
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
 
         public async Task<IActionResult> OnGet()
         {
@@ -59,6 +60,8 @@ namespace BOM.Pages.DistintaBase
                 FiglioId = ItemId,
                 Amount = Quantity
             };
+
+            Console.WriteLine("nuovaDistintaBase: " + nuovaDistintaBase.Amount);
 
             try
             {

@@ -27,49 +27,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-        @* @foreach (var item in Model.DistintaBase) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.VersioneDistintaBaseId)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.FiglioId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-} *@
-
-        @*  @foreach (var itemVersion in versioneDistintaBase)
-        {
-            foreach (var models in Model.DistintaBase)
-            {
-                foreach (var item in itemList)
-                {
-                    if (models.VersioneDistintaBaseId == itemVersion.Id && item.Id == itemVersion.ProductId)
-                    {
-                        <tr>
-                            <td>@item.Name</td>
-                            <td>@itemVersion.Version</td>
-                            <td>
-                                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                                <a asp-page="./Details" asp-route-id="@itemVersion.Id">Details</a> |
-                                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-                            </td>
-                        </tr>
-                    }
-                }
-            }
-        } *@
-
-        @foreach (var itemVersion in versioneDistintaBase)
+    @foreach (var itemVersion in versioneDistintaBase)
         {
             foreach (var itemlist in itemList)
             {

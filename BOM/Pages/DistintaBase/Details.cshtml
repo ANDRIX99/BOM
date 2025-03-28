@@ -11,12 +11,23 @@
 <h1>Details</h1>
 
 <div>
-    <h4>DistintaBase</h4>
+    <!-- <h4>DistintaBase</h4> -->
+    @foreach (var itemVersion in ItemVersion)
+    {
+        foreach (var itemlist in ItemList)
+        {
+            if (itemVersion.ProductId == itemlist.Id && itemVersion.Id == Id)
+            {
+                <h4>@itemlist.Name @itemVersion.Version</h4>
+            }
+        }
+    }
     <hr />
-    <table>
+    <table class="table">
         <tr>
             <td>Name</td>
             <td>Amount</td>
+            <td></td>
         </tr>
         @if (Model.ListDistintaBase != null) {
             @foreach (var list in Model.ListDistintaBase)
@@ -27,6 +38,7 @@
                     <td>@list.Amount</td>
                     <td>
                         <a asp-page="./Edit" asp-route-id="@list.Id" >Edit amount</a>
+                        <a asp-page="./Delete" asp-route-id="@list.Id" >Delete</a>
                     </td>
                 </tr>
             }
@@ -37,6 +49,18 @@
                 <td>Empty</td>
             </tr>
         }
+        <tr>
+            <td>Total amount:</td>
+            @{
+                decimal totalAmount = 0;
+                @foreach (var list in Model.ListDistintaBase)
+                {
+                    totalAmount += list.Amount;
+                }
+                <td>@totalAmount</td>
+            }
+            <td></td>
+        </tr>
     </table>
 </div>
 <div>

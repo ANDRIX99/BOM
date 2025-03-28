@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    var ItemList = ViewData["ItemList"] as List<BOM.Model.Item>;
 }
 
 <h1>Index</h1>
@@ -10,7 +11,31 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table" >
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Version</th>
+            <th>Creation time</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.VersioneDistintaBase)
+        {
+            @foreach (var list in ItemList) {
+                if(item.ProductId == list.Id)
+                {   <tr>
+                        <td>@list.Name</td>
+                        <td>@item.Version</td>
+                        <td>@item.CreationTime</td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>
+
+@* <table class="table">
     <thead>
         <tr>
             <th>
@@ -39,4 +64,4 @@
         </tr>
 }
     </tbody>
-</table>
+</table> *@
